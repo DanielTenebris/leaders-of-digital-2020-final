@@ -105,6 +105,16 @@ services:
     env_file:
       - .env
 
+  recognition:
+    container_name: recognition
+    image: alphacep/kaldi-en:latest
+    ports: 
+      - '2700:2700'
+    networks:
+      - webnet
+    env_file:
+      - .env
+
 networks:
   webnet:
     driver: bridge
