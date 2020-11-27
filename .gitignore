@@ -1,0 +1,7 @@
+chain
+
+logs
+
+.env.local
+
+logs/*
