@@ -3,8 +3,6 @@
 </template>
 
 <script>
-import WSAudioApi from 'ws-audio-api';
-
 export default {
   name: 'microphone',
 
@@ -14,10 +12,10 @@ export default {
     };
   },
 
+  created() {},
+
   methods: {
-    start() {
-      this.streamer = WSAudioApi.Streamer({});
-    },
+    start() {},
   },
 };
 </script>

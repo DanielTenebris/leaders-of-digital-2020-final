@@ -104,17 +104,17 @@ services:
       - webnet
     env_file:
       - .env
-
-  recognition:
-    container_name: recognition
-    image: alphacep/kaldi-en:latest
-    ports: 
-      - '2700:2700'
+  
+  openVidu:
+    container_name: video
+    image: openvidu/openvidu-server-kms
+    ports:
+      - '4443:4443'
+    env_file:
+      - .env.local
+      - .env
     networks:
       - webnet
-    env_file:
-      - .env
-
 networks:
   webnet:
     driver: bridge
