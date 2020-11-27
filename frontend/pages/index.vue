@@ -1,6 +1,6 @@
 <template>
   <div class="index-page">
-    <video-wrapper />
+    <contract-builder />
   </div>
 </template>
 
