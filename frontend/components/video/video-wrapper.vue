@@ -112,6 +112,7 @@ export default {
             });
             this.mainStreamManager = publisher;
             this.publisher = publisher;
+            console.log({ ...this.mainStreamManager });
 
             this.session.publish(this.publisher);
           })
@@ -149,6 +150,7 @@ export default {
       const OPENVIDU_SERVER_URL = 'https://localhost:4443';
       const OPENVIDU_SERVER_SECRET = 'DanielNikita';
 
+      this.$axios.setHeader('Content-Type', 'application/json', ['post']);
       return new Promise((resolve, reject) => {
         this.$axios
           .post(
@@ -186,7 +188,7 @@ export default {
     },
     createToken(sessionId) {
       const OPENVIDU_SERVER_URL = 'https://localhost:4443';
-      const OPENVIDU_SERVER_SECRET = process.env.OPENVIDU_SECRET;
+      const OPENVIDU_SERVER_SECRET = 'DanielNikita';
 
       return new Promise((resolve, reject) => {
         this.$axios
