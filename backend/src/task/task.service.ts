@@ -18,9 +18,9 @@ export class TaskService {
 
     async create(task: CreateTaskDto): Promise<TaskEntity> {
 
-        task.contracts.forEach((contract) => this.contractService.findOneById(contract))
-
         const newTask = this.taskRepository.create(task)
+        
+        newTask.contracts = await Promise.all(task.contractIds.map(async (contract) => await this.contractService.findOneById(contract)));
 
         return await this.taskRepository.save(newTask)
     }
@@ -34,6 +34,7 @@ export class TaskService {
     }
 
     async updateOne(taskId: number, updateTask: DeepPartial<UpdateTaskDto>): Promise<TaskEntity> {
+            
         await this.taskRepository.update({id: taskId}, updateTask);
         const updatedTask = await this.taskRepository.findOne(taskId);
         if (updatedTask) {

@@ -32,5 +32,5 @@ export class CreateTaskDto {
     readonly extraDesc?: string;
 
     @IsNumber({}, { each: true })
-    contracts: Array<number>
+    readonly contractIds: Array<number>
 }
