@@ -4,6 +4,10 @@ export default {
   ssr: false,
   components: true,
 
+  loading: {
+    color: 'blue',
+  },
+
   server: {
     port: process.env.FRONTEND_PORT,
     host: '0.0.0.0',
@@ -40,7 +44,7 @@ export default {
   },
 
   axios: {
-    baseURL: '',
+    baseURL: '/api',
   },
 
   build: {

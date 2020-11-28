@@ -1,9 +1,6 @@
 <template>
   <div v-if="streamManager" class="video-user">
     <video-element :stream-manager="streamManager" />
-    <div>
-      <p>{{ clientData }}</p>
-    </div>
   </div>
 </template>
 
@@ -27,7 +24,6 @@ export default {
 
   methods: {
     getConnectionData() {
-      console.log(this.streamManager);
       const { connection } = this.streamManager.stream;
       return JSON.parse(connection.data);
     },
