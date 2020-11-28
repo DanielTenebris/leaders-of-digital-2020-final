@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TaskEntity } from 'src/task/entities/task.entity';
 import { Repository, DeepPartial } from 'typeorm';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
@@ -10,7 +11,7 @@ import { ContractNotFoundException } from './exceptions/contract.exceptions';
 export class ContractService {
     constructor(
         @InjectRepository(ContractEntity)
-        private readonly contractRepository: Repository<ContractEntity>
+        private readonly contractRepository: Repository<ContractEntity>,
     ) {}
 
     async create(contract: CreateContractDto): Promise<ContractEntity> {
@@ -48,10 +49,11 @@ export class ContractService {
         const deadline = task["deadline"]
         
         const emitEvents = []
-        const contracts = this.contractRepository.find({ where: { task: taskId} });
+        const contracts = await this.contractRepository.find({ relations: ['tasks'] } );
+        console.log(`UPDATE !!!!!! ${contracts}`);
 
         (await contracts).forEach( (contract) => {
-            console.log(contract);
+            console.log(`UPDATE !!!!!! ${contract}`);
             // eval(contract["script"])
         })
         console.log(emitEvents)

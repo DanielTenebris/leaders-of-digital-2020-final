@@ -1,5 +1,4 @@
 import { IsBoolean, IsNumber, IsString } from "class-validator";
-import { ContractEntity } from "src/contract/entities/contract.entity";
 
 export class UpdateTaskDto {
     @IsString()

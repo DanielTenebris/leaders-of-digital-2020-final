@@ -39,7 +39,7 @@ export class TaskEntity {
     @Column("varchar", { nullable: true })
     extraDesc: string;
 
-    @ManyToMany(() => ContractEntity, { cascade: true })
+    @ManyToMany(() => ContractEntity, contract => contract.tasks , { cascade: true })
     @JoinTable({
         name: 'task_use_script',
         joinColumn: {name: 'task_id', referencedColumnName: 'id'},

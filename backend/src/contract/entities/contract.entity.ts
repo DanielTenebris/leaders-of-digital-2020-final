@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { TaskEntity } from "src/task/entities/task.entity";
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('contract')
 export class ContractEntity {
@@ -16,4 +17,7 @@ export class ContractEntity {
 
     @Column('varchar')
     label: string;
+
+    @ManyToMany(() => TaskEntity, task => task.contracts)
+    tasks: Array<TaskEntity>
 }
