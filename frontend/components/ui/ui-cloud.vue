@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-cloud">
+  <div class="ui-cloud" v-on="$listeners">
     <div v-if="header" class="ui-cloud__header">
       <h3>
         {{ header }}

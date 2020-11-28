@@ -1,65 +1,66 @@
 <template>
   <div class="video-wrapper">
     <div v-if="!session" id="join">
-      <div id="img-div">
-        <img src="resources/images/openvidu_grey_bg_transp_cropped.png" />
-      </div>
       <div id="join-dialog" class="jumbotron vertical-center">
-        <h1>Join a video session</h1>
-        <div class="form-group">
-          <p>
-            <label>Participant</label>
-            <input
-              v-model="myUserName"
-              class="form-control"
-              type="text"
-              required
-            />
-          </p>
-          <p>
-            <label>Session</label>
-            <input
-              v-model="mySessionId"
-              class="form-control"
-              type="text"
-              required
-            />
-          </p>
-          <p class="text-center">
-            <button class="btn btn-lg btn-success" @click="joinSession()">
-              Join!
-            </button>
-          </p>
-        </div>
+        <a-row type="flex">
+          <a-col
+            v-show="sessions.length"
+            v-for="conf in sessions"
+            :key="conf.id"
+            :span="5"
+          >
+            <ui-cloud
+              class="video-wrapper__conference"
+              @click="connectConf(conf)"
+            >
+              Войти в конференцию
+              <span>{{ conf.id }}</span>
+              <img src="/img/peoples.png" alt="" />
+            </ui-cloud>
+          </a-col>
+          <a-col :span="8">
+            <ui-cloud class="video-wrapper__create">
+              <a-input
+                v-model="mySessionId"
+                type="text"
+                placeholder="Название конференции"
+              />
+              <ui-button @click="joinSession()">
+                Создать конференцию
+              </ui-button>
+            </ui-cloud>
+          </a-col>
+        </a-row>
       </div>
     </div>
 
     <div v-if="session" id="session">
       <div id="session-header">
-        <h1 id="session-title">{{ mySessionId }}</h1>
-        <input
-          id="buttonLeaveSession"
-          value="Leave session"
-          class="btn btn-large btn-danger"
-          type="button"
-          @click="leaveSession"
-        />
+        <ui-button class="leave" @click="leaveSession">Выйти</ui-button>
       </div>
-      <div id="main-video" class="col-md-6">
-        <video-user :stream-manager="mainStreamManager" />
-      </div>
-      <div id="video-container" class="col-md-6">
-        <video-user
-          :stream-manager="publisher"
-          @click.native="updateMainVideoStreamManager(publisher)"
-        />
-        <video-user
+      <a-row type="flex" justify="center">
+        <a-col :span="12" id="main-video">
+          <video-user :stream-manager="mainStreamManager" />
+        </a-col>
+      </a-row>
+      <a-row type="flex" justify="space-between">
+        <a-col id="video-container" :span="3">
+          <video-user
+            :stream-manager="publisher"
+            @click.native="updateMainVideoStreamManager(publisher)"
+          />
+        </a-col>
+        <a-col
+          :span="3"
           v-for="sub in subscribers"
           :key="sub.stream.connection.connectionId"
-          :stream-manager="sub"
-          @click.native="updateMainVideoStreamManager(sub)"
-        />
-      </div>
+        >
+          <video-user
+            :stream-manager="sub"
+            @click.native="updateMainVideoStreamManager(sub)"
+          />
+        </a-col>
+      </a-row>
     </div>
   </div>
 </template>
@@ -72,17 +73,75 @@ export default {
 
   data() {
     return {
+      sessions: [],
       OV: undefined,
       session: undefined,
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
-      mySessionId: 'SessionA',
+      mySessionId: '',
       myUserName: 'Participant' + Math.floor(Math.random() * 100),
     };
   },
 
+  async mounted() {
+    this.$axios.setHeader(
+      'Authorization',
+      'Basic ' + Buffer.from('OPENVIDUAPP:DanielNikita').toString('base64'),
+    );
+    const { data: sessions } = await this.$axios.get(
+      'https://localhost:4443/openvidu/api/sessions',
+    );
+    console.log(sessions);
+    this.sessions = sessions.content;
+  },
+
   methods: {
+    connectConf(conf) {
+      console.log(conf);
+      this.OV = new OpenVidu();
+      this.session = this.OV.initSession();
+      this.session.on('streamCreated', ({ stream }) => {
+        const subscriber = this.session.subscribe(stream);
+        this.subscribers.push(subscriber);
+      });
+      this.session.on('streamDestroyed', ({ stream }) => {
+        const index = this.subscribers.indexOf(stream.streamManager, 0);
+        if (index >= 0) {
+          this.subscribers.splice(index, 1);
+        }
+      });
+      this.createToken(conf.id).then(token => {
+        this.session
+          .connect(token, { clientData: this.myUserName })
+          .then(() => {
+            let publisher = this.OV.initPublisher(undefined, {
+              audioSource: undefined,
+              videoSource: undefined,
+              publishAudio: true,
+              publishVideo: true,
+              resolution: '640x480',
+              frameRate: 30,
+              insertMode: 'APPEND',
+              mirror: false,
+            });
+            this.mainStreamManager = publisher;
+            this.publisher = publisher;
+            console.log({ ...this.mainStreamManager });
+
+            this.session.publish(this.publisher);
+          })
+          .catch(error => {
+            console.log(
+              'There was an error connecting to the session:',
+              error.code,
+              error.message,
+            );
+          });
+      });
+      window.addEventListener('beforeunload', this.leaveSession);
+    },
+
     joinSession() {
       this.OV = new OpenVidu();
       this.session = this.OV.initSession();
@@ -188,7 +247,6 @@ export default {
     },
     createToken(sessionId) {
       const OPENVIDU_SERVER_URL = 'https://localhost:4443';
-      const OPENVIDU_SERVER_SECRET = 'DanielNikita';
 
       return new Promise((resolve, reject) => {
         this.$axios
@@ -198,7 +256,7 @@ export default {
             {
               auth: {
                 username: 'OPENVIDUAPP',
-                password: OPENVIDU_SERVER_SECRET,
+                password: 'DanielNikita',
               },
             },
           )
@@ -211,4 +269,32 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.video-wrapper {
+  .ant-input {
+    margin-bottom: 20px;
+  }
+  &__conference {
+    cursor: pointer;
+    span {
+      margin-top: 13px;
+      margin-bottom: 13px;
+      display: block;
+      font-family: Circe;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 22px;
+      letter-spacing: 0em;
+      text-align: left;
+    }
+    img {
+      height: 30px;
+      display: block;
+    }
+  }
+  .leave {
+    margin-bottom: 30px;
+  }
+}
+</style>

@@ -17,6 +17,7 @@ export default {
       items: [
         { label: 'Главная', link: '/' },
         { label: 'Смарт-контракты', link: '/contracts' },
+        { label: 'Конференции', link: '/conference' },
       ],
     };
   },
