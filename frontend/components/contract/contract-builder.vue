@@ -2,7 +2,7 @@
   <div class="contract-builder">
     <div id="blocklyDiv" style="height: 830px; width: 100%"></div>
 
-    <ui-button> Сохранить </ui-button>
+    <ui-button @click="save"> Сохранить </ui-button>
   </div>
 </template>
 
@@ -21,6 +21,12 @@ export default {
       type: String,
       default: '',
     },
+  },
+
+  data() {
+    return {
+      Blockly: null,
+    };
   },
 
   mounted() {
@@ -42,15 +48,29 @@ export default {
       oneBasedIndex: false,
     };
 
-    var workspace = Blockly.inject(
+    this.Blockly = Blockly.inject(
       document.getElementById('blocklyDiv'),
       options,
     );
 
     Blockly.Xml.domToWorkspace(
       Blockly.Xml.textToDom(this.workspace),
-      workspace,
+      this.Blockly,
     );
+  },
+
+  methods: {
+    save() {
+      const xml = Blockly.Xml.workspaceToDom(this.Blockly);
+      const workspace = Blockly.Xml.domToText(xml);
+
+      const script = Blockly.JavaScript.workspaceToCode(this.Blockly);
+
+      this.$emit('save', {
+        workspace,
+        script,
+      });
+    },
   },
 };
 </script>
