@@ -17,7 +17,11 @@ export class TaskService {
     ) {}
 
     async create(task: CreateTaskDto): Promise<TaskEntity> {
+
+        task.contracts.forEach((contract) => this.contractService.findOneById(contract))
+
         const newTask = this.taskRepository.create(task)
+
         return await this.taskRepository.save(newTask)
     }
 
