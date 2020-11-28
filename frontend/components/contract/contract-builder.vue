@@ -1,6 +1,6 @@
 <template>
   <div class="contract-builder">
-    <div id="blocklyDiv" style="height: 100vh; width: 100%"></div>
+    <div id="blocklyDiv" style="height: 830px; width: 100%"></div>
   </div>
 </template>
 
@@ -50,4 +50,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.contract-builder {
+  position: static;
+  top: 10px;
+}
+</style>

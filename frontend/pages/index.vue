@@ -16,9 +16,10 @@
           </ui-cloud>
         </a-col>
         <a-col :span="12">
-          <ui-cloud header="Технологические процессы">
-            <img src="/img/processes.png" alt="" /> </ui-cloud
-        ></a-col>
+          <ui-cloud header="Технологические процессы" class="index-page__short">
+            <img src="/img/processes.png" alt="" />
+          </ui-cloud>
+        </a-col>
       </a-row>
     </a-col>
   </a-row>
@@ -31,8 +32,9 @@ export default {};
 <style lang="scss">
 .index-page {
   &__short {
-    img {
+    .ui-cloud__content img {
       width: 100%;
+      pointer-events: none;
     }
   }
 }

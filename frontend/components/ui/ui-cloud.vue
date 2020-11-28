@@ -1,6 +1,6 @@
 <template>
   <div class="ui-cloud">
-    <div class="ui-cloud__header">
+    <div v-if="header" class="ui-cloud__header">
       <h3>
         {{ header }}
       </h3>
