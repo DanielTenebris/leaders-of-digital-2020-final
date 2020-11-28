@@ -17,9 +17,6 @@ export class CreateTaskDto {
     readonly workerId: Array<number>;
 
     @IsNumber()
-    readonly created?: Date;
-
-    @IsNumber()
     readonly createdById: number;
 
     @IsBoolean()

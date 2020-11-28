@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('task')
 export class TaskEntity {
@@ -16,6 +16,9 @@ export class TaskEntity {
     
     @Column('timestamp', { nullable: true })
     finishDate: Date;
+
+    @CreateDateColumn({ default: () => 'NOW()' })
+    createdAt: number;
 
     @Column('smallint', { name: 'worker', array: true })
     workerId: Array<number>;
