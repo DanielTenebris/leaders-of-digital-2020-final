@@ -25,6 +25,5 @@ export class ContractEntity {
   label: string;
 
   @ManyToMany(() => TaskEntity, task => task.contracts)
-  @JoinTable()
   tasks: Array<TaskEntity>;
 }

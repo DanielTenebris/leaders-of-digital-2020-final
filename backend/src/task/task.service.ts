@@ -35,12 +35,14 @@ export class TaskService {
         return await this.taskRepository.findOne({id: taskId})
     }
 
-    async updateOne(taskId: number, updateTask: DeepPartial<UpdateTaskDto>): Promise<TaskEntity> {
+    async updateOne(taskId: number, updateTask: DeepPartial<UpdateTaskDto>, exec = true): Promise<TaskEntity> {
             
         await this.taskRepository.update({id: taskId}, updateTask);
         const updatedTask = await this.taskRepository.findOne(taskId);
         if (updatedTask) {
-            this.execContracts(taskId)
+            if (exec) {
+                this.execContracts(taskId)
+            }
             return updatedTask
         } 
         throw new TaskNotFoundException(taskId);
@@ -51,28 +53,34 @@ export class TaskService {
         return await this.taskRepository.remove(taskToRemove);
     }
 
-    async execContracts(taskId: number): Promise<any> {
-        
-        console.log(`TASK SUKA ID ->>>> ${taskId}`)
-        
-        
-        const task = this.findOneById(taskId)
-        const emitEvents = []
+    async execContracts(taskId: number): Promise<any> {    
+        const task = await this.findOneById(taskId)
+        const dateNowInsert = Date.now();
+        const deadlineInsert = new Date(task["deadline"]).getTime();
         
         const taskWithRelatedContracts = await this.taskRepository.findOne({ where: {id: taskId}, relations: ["contracts"]});
-
         const contracts = classToPlain(taskWithRelatedContracts)["contracts"]
         
+        const emitEvents = []
         contracts.forEach( (contract) => {
-            const eventToEmit = eval(`var dateNow = ${Date.now()}; var deadline = ${task["deadline"]};` + contract["script"].raw())
-            console.log(eventToEmit)
-            emitEvents.concat(eventToEmit)
+            const executeResult = eval(contract["script"]
+            .replace("\'${dateNowInsert}\'", `\'${dateNowInsert}\'`)
+            .replace("\'${deadlineInsert}\'", `\'${deadlineInsert}\'`))
+
+            emitEvents.push(...executeResult)
         })
-    
-        console.log(emitEvents)
+
+        const functionsByEmited = {
+            'просрочено': () => {
+                const updateTask = {
+                    "warning": true
+                }
+                this.updateOne(taskId, updateTask, false);
+            }
+            }
 
         emitEvents.forEach((event) => {
-            event()
+            functionsByEmited[event]()
         });
     }
 }
