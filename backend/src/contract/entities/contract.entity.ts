@@ -13,4 +13,7 @@ export class ContractEntity {
 
     @Column('varchar')
     toolbox: string;
+
+    @Column('varchar')
+    label: string;
 }

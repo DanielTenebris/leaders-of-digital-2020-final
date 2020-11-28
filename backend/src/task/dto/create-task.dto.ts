@@ -17,7 +17,7 @@ export class CreateTaskDto {
     readonly workerId: Array<number>;
 
     @IsNumber()
-    readonly created: Date;
+    readonly created?: Date;
 
     @IsNumber()
     readonly createdById: number;
@@ -26,7 +26,7 @@ export class CreateTaskDto {
     readonly warning?: boolean;
 
     @IsString({ each: true })
-    linked?: Array<string>
+    readonly linked?: Array<string>
 
     @IsNumber()
     readonly discussionId?: number;

@@ -2,11 +2,14 @@ import { IsString } from "class-validator";
 
 export class CreateContractDto {
     @IsString()
-    script: string;
+    readonly script: string;
 
     @IsString()
-    workspace: string;
+    readonly workspace: string;
 
     @IsString()
-    toolbox: string;
+    readonly toolbox: string;
+
+    @IsString()
+    readonly label: string;
 }
