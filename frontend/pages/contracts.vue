@@ -13,17 +13,22 @@
 
             <span>{{ contract.label }}</span>
 
-            <svg-icon class="trash" name="trash" />
+            <svg-icon
+              class="trash"
+              name="trash"
+              @click.prevent.stop="remove(contract)"
+            />
           </div>
           <ui-button type="primary" @click="create"> Добавить новый </ui-button>
         </ui-cloud>
       </a-col>
-      <a-col :span="15">
+      <a-col :span="16">
         <ui-cloud>
           <contract-builder
             :key="active"
             :toolbox="builder.toolbox"
             :workspace="builder.workspace"
+            @save="save"
           />
         </ui-cloud>
       </a-col>
@@ -36,7 +41,7 @@ export default {
   name: 'contracts',
   async asyncData({ $axios }) {
     const { data: contracts } = await $axios.get('/contract');
-    console.log(contracts);
+
     return {
       active: null,
       contracts,
@@ -56,13 +61,32 @@ export default {
       this.active = active.id;
     },
 
-    create() {
-      this.$axios.post('/contract', {
+    async create() {
+      await this.$axios.post('/contract', {
         toolbox: this.defaultToolbox,
         workspace: this.defaultWorkspace,
         label: 'Смарт-контракт',
         script: '',
       });
+
+      const { data: contracts } = await this.$axios.get('/contract');
+      this.contracts = contracts;
+    },
+
+    async save(blockly) {
+      await this.$axios.put(`/contract/${this.active}`, {
+        ...blockly,
+      });
+
+      const { data: contracts } = await this.$axios.get('/contract');
+      this.contracts = contracts;
+    },
+
+    async remove({ id }) {
+      await this.$axios.delete(`/contract/${id}`);
+
+      const { data: contracts } = await this.$axios.get('/contract');
+      this.contracts = contracts;
     },
   },
 };
