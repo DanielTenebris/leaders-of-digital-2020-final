@@ -16,9 +16,7 @@ export default {
     return {
       items: [
         { label: 'Главная', link: '/' },
-        { label: 'Сообщения', link: '/' },
-        { label: 'Настрйоки', link: '/' },
-        { label: 'Настройки', link: '/' },
+        { label: 'Смарт-контракты', link: '/contracts' },
       ],
     };
   },

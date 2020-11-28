@@ -1,6 +1,6 @@
 <template>
   <div class="contract-builder">
-    <div id="blocklyDiv" style="height: 800px; width: 1000px"></div>
+    <div id="blocklyDiv" style="height: 100vh; width: 100%"></div>
   </div>
 </template>
 
