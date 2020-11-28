@@ -1,6 +1,7 @@
 <template>
   <div class="index-page">
-    <contract-builder />
+    afsfasfsafas
+    <!-- <contract-builder /> -->
   </div>
 </template>
 
