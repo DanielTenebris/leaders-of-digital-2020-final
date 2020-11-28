@@ -58,15 +58,13 @@ export class TaskService {
         
         const task = this.findOneById(taskId)
         const emitEvents = []
-        const dateNow = Date.now()
-        const deadline = task["deadline"]    
         
         const taskWithRelatedContracts = await this.taskRepository.findOne({ where: {id: taskId}, relations: ["contracts"]});
 
         const contracts = classToPlain(taskWithRelatedContracts)["contracts"]
         
         contracts.forEach( (contract) => {
-            const eventToEmit = eval(contract["script"])
+            const eventToEmit = eval(`var dateNow = ${Date.now()}; var deadline = ${task["deadline"]};` + contract["script"].raw())
             console.log(eventToEmit)
             emitEvents.concat(eventToEmit)
         })
