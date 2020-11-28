@@ -1,6 +1,13 @@
 @include font-face(Circe, '/fonts/Circe-Bold', 700, normal, eot woff ttf);
 @include font-face(Circe, '/fonts/Circe-Regular', 400, normal, eot woff ttf);
 @include font-face(Gilroy, '/fonts/Gilroy-Light', 500, normal, eot woff ttf);
+@include font-face(
+  Gilroy,
+  '/fonts/Gilroy-ExtraBold',
+  700,
+  normal,
+  eot woff ttf
+);
 
 body {
   background: #f8f9fd !important;

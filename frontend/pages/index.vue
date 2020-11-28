@@ -1,8 +1,5 @@
 <template>
-  <div class="index-page">
-    afsfasfsafas
-    <!-- <contract-builder /> -->
-  </div>
+  <div class="index-page">afsfsafsa</div>
 </template>
 
 <script>
