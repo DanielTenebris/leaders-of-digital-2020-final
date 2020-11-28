@@ -1,23 +1,30 @@
-import { TaskEntity } from "src/task/entities/task.entity";
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { TaskEntity } from 'src/task/entities/task.entity';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  JoinTable,
+} from 'typeorm';
 
 @Entity('contract')
 export class ContractEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column('varchar')
-    script: string;
+  @Column('varchar')
+  script: string;
 
-    @Column('varchar')
-    workspace: string;
+  @Column('varchar')
+  workspace: string;
 
-    @Column('varchar')
-    toolbox: string;
+  @Column('varchar')
+  toolbox: string;
 
-    @Column('varchar')
-    label: string;
+  @Column('varchar')
+  label: string;
 
-    @ManyToMany(() => TaskEntity, task => task.contracts)
-    tasks: Array<TaskEntity>
+  @ManyToMany(() => TaskEntity, task => task.contracts)
+  @JoinTable()
+  tasks: Array<TaskEntity>;
 }
