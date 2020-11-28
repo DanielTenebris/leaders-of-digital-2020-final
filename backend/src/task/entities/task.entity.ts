@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ContractEntity } from "src/contract/entities/contract.entity";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('task')
 export class TaskEntity {
@@ -18,7 +19,7 @@ export class TaskEntity {
     finishDate: Date;
 
     @CreateDateColumn({ default: () => 'NOW()' })
-    createdAt: number;
+    createdAt: Date;
 
     @Column('smallint', { name: 'worker', array: true })
     workerId: Array<number>;
@@ -37,4 +38,12 @@ export class TaskEntity {
     
     @Column("varchar", { nullable: true })
     extraDesc: string;
+
+    @ManyToMany(() => ContractEntity, { cascade: true })
+    @JoinTable({
+        name: 'task_use_script',
+        joinColumn: {name: 'task_id', referencedColumnName: 'id'},
+        inverseJoinColumn: { name: 'contract_id', referencedColumnName: 'id'}
+    })
+    contracts: Array<ContractEntity>
 }

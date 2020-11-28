@@ -39,4 +39,24 @@ export class ContractService {
         const contractToRemove = await this.contractRepository.find({id: contractId});
         return await this.contractRepository.remove(contractToRemove);
     }
+
+    async execContracts(taskId: number): Promise<any> {
+        
+        const dateNow = Date.now()
+        const task = this.findOneById(taskId)
+        console.log(task)
+        const deadline = task["deadline"]
+        
+        const emitEvents = []
+        const contracts = this.contractRepository.find({ where: { task: taskId} });
+
+        (await contracts).forEach( (contract) => {
+            console.log(contract);
+            // eval(contract["script"])
+        })
+        console.log(emitEvents)
+        
+        return true;
+
+    }
 }
