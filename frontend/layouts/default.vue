@@ -3,7 +3,9 @@
     <sidebar />
     <a-layout>
       <a-layout-content class="content">
-        <Nuxt />
+        <transition name="fadeBottom">
+          <Nuxt />
+        </transition>
       </a-layout-content>
     </a-layout>
   </a-layout>

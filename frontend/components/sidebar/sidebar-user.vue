@@ -3,7 +3,7 @@
     <img class="sidebar-user__image" src="/img/avatar.png" alt="" />
     <div class="sidebar-user__user">
       <div class="sidebar-user__name">Шарипов Геннадий Петрович</div>
-      <div class="sidebar-user__position">Главный сварщик</div>
+      <div class="sidebar-user__position">Руководитель участка №3</div>
     </div>
     <div class="sidebar-user__alarm">
       <ui-alarm />
@@ -63,7 +63,7 @@ export default {
   }
   &__position {
     font-family: Gilroy;
-    font-size: 10px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: 14px;

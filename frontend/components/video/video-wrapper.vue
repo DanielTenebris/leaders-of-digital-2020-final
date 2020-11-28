@@ -90,7 +90,7 @@ export default {
       'Basic ' + Buffer.from('OPENVIDUAPP:DanielNikita').toString('base64'),
     );
     const { data: sessions } = await this.$axios.get(
-      'https://localhost:4443/openvidu/api/sessions',
+      'https://172.27.146.210:4443/openvidu/api/sessions',
     );
     console.log(sessions);
     this.sessions = sessions.content;
@@ -206,7 +206,7 @@ export default {
     },
 
     createSession(sessionId) {
-      const OPENVIDU_SERVER_URL = 'https://localhost:4443';
+      const OPENVIDU_SERVER_URL = 'https://172.27.146.210:4443';
       const OPENVIDU_SERVER_SECRET = 'DanielNikita';
 
       this.$axios.setHeader('Content-Type', 'application/json', ['post']);
@@ -246,7 +246,7 @@ export default {
       });
     },
     createToken(sessionId) {
-      const OPENVIDU_SERVER_URL = 'https://localhost:4443';
+      const OPENVIDU_SERVER_URL = 'https://172.27.146.210:4443';
 
       return new Promise((resolve, reject) => {
         this.$axios
