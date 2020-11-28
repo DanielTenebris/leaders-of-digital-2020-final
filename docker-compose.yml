@@ -89,22 +89,7 @@ services:
       - webnet
     env_file:
       - .env
-  
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: '${POSTGRES_EMAIL}'
-      PGADMIN_DEFAULT_PASSWORD: '${POSTGRES_PASSWORD}'
-    volumes:
-      - pgadmin:/root/.pgadmin
-    ports:
-      - '${PGADMIN_PORT:-5050}:80'
-    networks:
-      - webnet
-    env_file:
-      - .env
-  
+
   openVidu:
     container_name: video
     image: openvidu/openvidu-server-kms
@@ -115,6 +100,7 @@ services:
       - .env
     networks:
       - webnet
+
 networks:
   webnet:
     driver: bridge
