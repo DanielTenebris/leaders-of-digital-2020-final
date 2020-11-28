@@ -40,7 +40,7 @@ export default {
   },
 
   axios: {
-    baseURL: '',
+    baseURL: '/api',
   },
 
   build: {
