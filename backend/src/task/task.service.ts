@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { classToPlain } from 'class-transformer';
 import { ContractService } from 'src/contract/contract.service';
 import { Repository, DeepPartial } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -12,8 +13,9 @@ export class TaskService {
     constructor(
         @InjectRepository(TaskEntity)
         private readonly taskRepository: Repository<TaskEntity>,
-        
+
         private readonly contractService: ContractService,
+
     ) {}
 
     async create(task: CreateTaskDto): Promise<TaskEntity> {
@@ -38,7 +40,7 @@ export class TaskService {
         await this.taskRepository.update({id: taskId}, updateTask);
         const updatedTask = await this.taskRepository.findOne(taskId);
         if (updatedTask) {
-            this.contractService.execContracts(taskId)
+            this.execContracts(taskId)
             return updatedTask
         } 
         throw new TaskNotFoundException(taskId);
@@ -47,5 +49,27 @@ export class TaskService {
     async deleteOne(taskId: number): Promise<TaskEntity[]> {
         const taskToRemove = await this.taskRepository.find({id: taskId});
         return await this.taskRepository.remove(taskToRemove);
+    }
+
+    async execContracts(taskId: number): Promise<any> {
+        
+        console.log(`TASK SUKA ID ->>>> ${taskId}`)
+        
+        
+        const task = this.findOneById(taskId)
+        const emitEvents = []
+        const dateNow = Date.now()
+        const deadline = task["deadline"]
+        
+        
+        const taskWithRelatedContracts = await this.taskRepository.findOne({ where: {id: taskId}, relations: ["contracts"]});
+
+        const contracts = classToPlain(taskWithRelatedContracts)["contracts"]
+        
+        contracts.forEach( (contract) => {
+            eval(contract["script"])
+        })
+    
+        console.log(emitEvents)
     }
 }
